@@ -36,5 +36,14 @@ Custom Android View to provide a user friendly way of picking numbers. 🧪
             app:swipeGestureSensitivity="medium" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
+## Listen for changes
+```
+numberPickerView.setOnNumberChangedListener(object : OnNumberChangedListener {
+            override fun onChanged(newNumber: Int) {
+                Log.e("NumberPickerView", "New number: $newNumber")
+            }
+
+        })
+```
 # License
 [GNU Lesser General Public License v3.0](https://choosealicense.com/licenses/lgpl-3.0/)
