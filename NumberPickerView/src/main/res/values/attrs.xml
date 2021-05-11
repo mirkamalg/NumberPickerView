@@ -12,6 +12,7 @@
         <attr name="enableSwipeGesture" format="boolean" />
         <attr name="enableVibration" format="boolean" />
         <attr name="enableLongPressToReset" format="boolean" />
+        <attr name="enableUserInput" format="boolean" />
         <attr name="swipeGestureSensitivity" format="enum">
             <enum name="low" value="0" />
             <enum name="medium" value="1" />

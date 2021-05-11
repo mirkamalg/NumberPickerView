@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import com.google.android.material.card.MaterialCardView
 
 /**
@@ -28,6 +29,8 @@ class NumberPickerView @JvmOverloads constructor(
         const val COLOR_BACKGROUND_DEFAULT = "#0A578BFE"
         const val COLOR_PLUS_MINUS_TEXT_DEFAULT = "#407BFE"
         const val COLOR_INDICATOR_TEXT_DEFAULT = "#001D5B"
+        const val COLOR_DISABLED_BACKGROUND = "#CCCCCC"
+        const val COLOR_DISABLED_TEXT = "#888888"
 
         enum class SENSITIVITY {
             LOW, MEDIUM, HIGH
@@ -38,20 +41,83 @@ class NumberPickerView @JvmOverloads constructor(
     private var vibrator: Vibrator? = null
     private var mGestureDetector: GestureDetector? = null
 
+    @ColorInt
     var plusButtonBackgroundColor = 0
+
+    @ColorInt
     var minusButtonBackgroundColor = 0
+
+    @ColorInt
     var indicatorBackgroundColor = 0
+
+    @ColorInt
     var plusTextColor = 0
+
+    @ColorInt
     var minusTextColor = 0
+
+    @ColorInt
     var indicatorTextColor = 0
-    var maxValue = 100
-    var minValue = 0
+
+    private var mMaxValue = 100
+    var maxValue: Int
+        get() = mMaxValue
+        set(value) {
+            mMaxValue = value
+            if (mCurrentValue > value) {
+                mCurrentValue = value
+                indicatorTextView.text = value.toString()
+                mOnNumberChangedListener?.onChanged(mCurrentValue)
+            }
+        }
+
+    private var mMinValue = 0
+    var minValue: Int
+        get() = mMinValue
+        set(value) {
+            mMinValue = value
+            if (mCurrentValue < value) {
+                mCurrentValue = value
+                indicatorTextView.text = value.toString()
+                mOnNumberChangedListener?.onChanged(mCurrentValue)
+            }
+        }
+
     var enableSwipeGesture = true
     var enableLongPressToReset = true
     var enableVibration = true
+    private var mEnableUserInput = true
+    var enableUserInput: Boolean
+        get() = mEnableUserInput
+        set(value) {
+            mEnableUserInput = value
+
+            //If plusButton is initialized, all are, so 1 check is enough
+            if (this::plusButton.isInitialized) {
+                plusButton.isEnabled = value
+                minusButton.isEnabled = value
+
+                if (value) {
+                    plusButton.setCardBackgroundColor(plusButtonBackgroundColor)
+                    minusButton.setCardBackgroundColor(minusButtonBackgroundColor)
+                    indicatorView.setCardBackgroundColor(indicatorBackgroundColor)
+                    plusTextView.setTextColor(plusTextColor)
+                    minusTextView.setTextColor(minusTextColor)
+                    indicatorTextView.setTextColor(indicatorTextColor)
+                } else {
+                    plusButton.setCardBackgroundColor(parseColor(COLOR_DISABLED_BACKGROUND))
+                    minusButton.setCardBackgroundColor(parseColor(COLOR_DISABLED_BACKGROUND))
+                    indicatorView.setCardBackgroundColor(parseColor(COLOR_DISABLED_BACKGROUND))
+                    plusTextView.setTextColor(parseColor(COLOR_DISABLED_TEXT))
+                    minusTextView.setTextColor(parseColor(COLOR_DISABLED_TEXT))
+                    indicatorTextView.setTextColor(parseColor(COLOR_DISABLED_TEXT))
+                }
+            }
+        }
+
     var swipeSensitivity = SENSITIVITY.MEDIUM
 
-    private var mCurrentValue = minValue
+    private var mCurrentValue = mMinValue
     val currentValue: Int
         get() = mCurrentValue
 
@@ -105,14 +171,15 @@ class NumberPickerView @JvmOverloads constructor(
                         COLOR_INDICATOR_TEXT_DEFAULT
                     )
                 )
-                maxValue = getInt(R.styleable.NumberPickerView_maxValue, 100)
-                minValue = getInt(R.styleable.NumberPickerView_minValue, 0)
-                mCurrentValue = minValue
+                mMaxValue = getInt(R.styleable.NumberPickerView_maxValue, 100)
+                mMinValue = getInt(R.styleable.NumberPickerView_minValue, 0)
+                mCurrentValue = mMinValue
                 enableSwipeGesture =
                     getBoolean(R.styleable.NumberPickerView_enableSwipeGesture, true)
                 enableLongPressToReset =
                     getBoolean(R.styleable.NumberPickerView_enableLongPressToReset, true)
                 enableVibration = getBoolean(R.styleable.NumberPickerView_enableVibration, true)
+                enableUserInput = getBoolean(R.styleable.NumberPickerView_enableUserInput, true)
                 swipeSensitivity =
                     when (getInt(R.styleable.NumberPickerView_swipeGestureSensitivity, 1)) {
                         0 -> SENSITIVITY.LOW
@@ -212,7 +279,7 @@ class NumberPickerView @JvmOverloads constructor(
             textViwParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
             textViwParams.height = FrameLayout.LayoutParams.WRAP_CONTENT
             layoutParams = textViwParams
-            text = minValue.toString()
+            text = mMinValue.toString()
             setTextColor(indicatorTextColor)
         }
         plusTextView.apply {
@@ -283,7 +350,7 @@ class NumberPickerView @JvmOverloads constructor(
             return@setOnTouchListener false
         }
         indicatorView.setOnTouchListener { _, event ->
-            mGestureDetector?.onTouchEvent(event)
+            if (mEnableUserInput) mGestureDetector?.onTouchEvent(event)
             true
         }
     }
@@ -292,7 +359,7 @@ class NumberPickerView @JvmOverloads constructor(
      * Increment the value and update UI
      */
     private fun increment() {
-        if (mCurrentValue < maxValue) mCurrentValue++
+        if (mCurrentValue < mMaxValue) mCurrentValue++
         indicatorTextView.text = mCurrentValue.toString()
     }
 
@@ -300,7 +367,7 @@ class NumberPickerView @JvmOverloads constructor(
      * Decrement the value and update UI
      */
     private fun decrement() {
-        if (mCurrentValue > minValue) mCurrentValue--
+        if (mCurrentValue > mMinValue) mCurrentValue--
         indicatorTextView.text = mCurrentValue.toString()
     }
 
@@ -376,7 +443,7 @@ class NumberPickerView @JvmOverloads constructor(
                     }
                 )?.let {
                     val newValue = old + it
-                    if (newValue >= minValue && newValue <= maxValue + 1) {
+                    if (newValue >= mMinValue && newValue <= mMaxValue + 1) {
                         if (mCurrentValue != newValue.toInt()) {
                             if (enableVibration) vibrate(20, 20)
                             mCurrentValue = newValue.toInt()
