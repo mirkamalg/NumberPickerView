@@ -6,10 +6,11 @@ Custom Android View to provide a user friendly way of picking numbers. 🧪
 * Give haptic feedback on gestures.
 * More stuff I'm planning for the future.. 📅
 # Sample app
-![Sample](/screenshots/sample.gif)
-You can [download](https://drive.google.com/file/d/1EQ2XCTMq4DZGADPcKCmGNsieeuVwA0c-/view?usp=sharing) and try out the sample app yourself too!
+* ![Sample](/screenshots/sample.gif)
+* You can [download](https://drive.google.com/file/d/1EQ2XCTMq4DZGADPcKCmGNsieeuVwA0c-/view?usp=sharing) and try out the sample app yourself too!
 # Usage
-```<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+```
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
