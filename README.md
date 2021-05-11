@@ -9,8 +9,24 @@ Custom Android View to provide a user friendly way of picking numbers. 🧪
 * ![Sample](/screenshots/sample.gif)
 * You can [download](https://drive.google.com/file/d/1EQ2XCTMq4DZGADPcKCmGNsieeuVwA0c-/view?usp=sharing) and try out the sample app yourself too!
 # Usage
-## Get the AAR
-* See [releases](https://github.com/Re1r0/NumberPickerView/releases)
+## Dependency
+* See [releases](https://github.com/Re1r0/NumberPickerView/releases) to manually download AAR
+
+For Gradle, in your project level build.gradle file:
+```
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+And then add the library in your module build.gradle:
+```
+dependencies {
+	        implementation 'com.github.Re1r0:NumberPickerView:v1.0.0'
+	}
+```
 ## Add the view to your layout
 ```
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
