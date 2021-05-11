@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumberPickerView">
+        <attr name="plusButtonBackgroundColor" format="color" />
+        <attr name="minusButtonBackgroundColor" format="color" />
+        <attr name="indicatorBackgroundColor" format="color" />
+        <attr name="plusTextColor" format="color" />
+        <attr name="minusTextColor" format="color" />
+        <attr name="indicatorTextColor" format="color" />
+        <attr name="maxValue" format="integer" />
+        <attr name="minValue" format="integer" />
+        <attr name="enableSwipeGesture" format="boolean" />
+        <attr name="enableVibration" format="boolean" />
+        <attr name="enableLongPressToReset" format="boolean" />
+        <attr name="swipeGestureSensitivity" format="enum">
+            <enum name="low" value="0" />
+            <enum name="medium" value="1" />
+            <enum name="high" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>
