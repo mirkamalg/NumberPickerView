@@ -24,7 +24,7 @@ allprojects {
 And then add the library in your module build.gradle:
 ```
 dependencies {
-	        implementation 'com.github.Re1r0:NumberPickerView:v1.0.0'
+	        implementation 'com.github.Re1r0:NumberPickerView:v1.0.1'
 	}
 ```
 ## Add the view to your layout
